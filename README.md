@@ -1,6 +1,6 @@
 # PixaBay Gallery in Vue and Buefy
 
-[https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D](https://vuejs.org/)
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 
 ## Project Briefing
 
@@ -59,4 +59,5 @@ Top view of the images page, it uses Bulma Cards inside of carousel Buefy compon
 Shows search bar with search icon. Clicking on the search icon would trigger the search API which would fetch the images with associated keywords from pixabay API.
 
 ![alt text](./screenshots/images1.jpg)
+
 
