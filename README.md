@@ -21,7 +21,7 @@ I had a lot of fun making this project, completed it in around 2 hours. I used B
 
 ## 💾 Project setup
 
-Simply install node modules for frontend, setup your env file and enter the API key which you should have retrieved from PixaBay website. The API limits usage on an hourly basis to somewhere around 100 requests. But, it should be suffice for Educational and Experimental purposes.
+Simply install node modules for frontend, setup your env file and enter the API keys which you should have retrieved from PixaBay and Flickr websites respectively. The API limits usage on an hourly basis to somewhere around 100 requests. But, it should be suffice for Educational and Experimental purposes.
 
 
 ```
@@ -29,12 +29,13 @@ npm install
 npm run serve
 ```
 
-For production, build the frontend of the app and then run the backend app only. 
+For production, build the frontend of the app and run the production build. 
 
 ```
 npm run build
 
 VUE_APP_PIXABAY_API_KEY=your API Key
+VUE_APP_FLICKR_API_KEY=your API Key
 ```
 ## 🚅 Project Features
 
@@ -43,6 +44,10 @@ VUE_APP_PIXABAY_API_KEY=your API Key
 - Uses PixaBay API for images.
 
 ## Project Updates
+
+- Added Flickr API view (23rd January 2022), might add pagination later.
+
+## Future Feature Additions
 
 - Mobile friendly menu could be added in the future.
 
@@ -59,5 +64,9 @@ Top view of the images page, it uses Bulma Cards inside of carousel Buefy compon
 Shows search bar with search icon. Clicking on the search icon would trigger the search API which would fetch the images with associated keywords from pixabay API.
 
 ![alt text](./screenshots/images1.jpg)
+
+Shows the newly added flickr images page where you can fetch images from Flickr using keywords in case you have the flickr API configured in the project.
+
+![alt text](./screenshots/flickr.png)
 
 

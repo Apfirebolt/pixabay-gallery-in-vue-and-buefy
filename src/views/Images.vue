@@ -2,7 +2,7 @@
   <div class="container">
     <div class="notification p-3 m-3">
       <h3 class="is-size-4 has-text-centered">PixaBay Images</h3>
-      <h3 v-if="images.length === 0 && !loading" class="is-size-4 has-text-centered">No Images Found on Pixabay</h3>
+      <h3 v-if="images.length === 0 && !loading" class="is-size-5 my-2 has-text-danger has-text-centered">No Images Found on Pixabay</h3>
       <b-loading :is-full-page="isFullPage" v-model="loading" :can-cancel="true"></b-loading>
       <b-field class="my-2">
         <b-input

@@ -19,7 +19,7 @@
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
         <router-link class="navbar-item" to="/">Home</router-link>
-        <router-link class="navbar-item" to="/images">PixaBay Images</router-link>
+        <router-link class="navbar-item" to="/pixabay-images">PixaBay Images</router-link>
         <router-link class="navbar-item" to="/flickr-images">FlickR Images</router-link>
       </div>
     </div>
