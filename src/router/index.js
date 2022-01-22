@@ -11,12 +11,14 @@ const routes = [
     component: Home
   },
   {
-    path: '/images',
+    path: '/pixabay-images',
     name: 'Images',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/Images.vue')
+    component: () => import(/* webpackChunkName: "pixabay-images" */ '../views/Images.vue')
+  },
+  {
+    path: '/flickr-images',
+    name: 'FlickrImages',
+    component: () => import(/* webpackChunkName: "flickr-images" */ '../views/FlickrImages.vue')
   }
 ]
 
