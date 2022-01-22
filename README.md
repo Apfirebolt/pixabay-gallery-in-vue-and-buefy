@@ -1,5 +1,7 @@
 # PixaBay Gallery in Vue and Buefy
 
+[https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D](https://vuejs.org/)
+
 ## Project Briefing
 
 This is a carousel based gallery app created using Vue and Buefy. For images it uses API provided by [PixaBay](https://pixabay.com/) which is free for limited usage.
@@ -17,7 +19,7 @@ I had a lot of fun making this project, completed it in around 2 hours. I used B
 
 * **Amit Prafulla (APFirebolt)** - (https://apgiiit.com/)
 
-## Project setup
+## 💾 Project setup
 
 Simply install node modules for frontend, setup your env file and enter the API key which you should have retrieved from PixaBay website. The API limits usage on an hourly basis to somewhere around 100 requests. But, it should be suffice for Educational and Experimental purposes.
 
@@ -34,7 +36,7 @@ npm run build
 
 VUE_APP_PIXABAY_API_KEY=your API Key
 ```
-## Project Features
+## 🚅 Project Features
 
 - Carousel based image gallery.
 - Uses Buefy for UI components like Carousel, Loaders, Buttons and more.
