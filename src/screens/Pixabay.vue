@@ -14,7 +14,7 @@
           Explore High-Resolution Photography
         </h1>
         <p class="text-sm sm:text-base text-neutral-400">
-          Search millions of stunning free images powered by the Pixabay API and FastAPI/Vue.
+          Search millions of stunning free images powered by the Pixabay API and Vue.
         </p>
       </div>
 

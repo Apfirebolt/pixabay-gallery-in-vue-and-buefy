@@ -1,72 +1,188 @@
-# PixaBay Gallery in Vue and Buefy
+# PixaBay Gallery in Vue
 
-![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+<p align="center">
+  <a href="https://vuejs.org/"><img src="https://img.shields.io/badge/Vue.js-3-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white" alt="Vue.js" /></a>
+  <a href="https://vite.dev/"><img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" /></a>
+  <a href="https://tailwindcss.com/"><img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS" /></a>
+  <a href="https://pixabay.com/api/docs/"><img src="https://img.shields.io/badge/Pixabay_API-2EC66D?style=for-the-badge&logo=pixabay&logoColor=white" alt="Pixabay API" /></a>
+  <a href="https://axios-http.com/"><img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white" alt="Axios" /></a>
+  <a href="https://vitest.dev/"><img src="https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" alt="Vitest" /></a>
+  <a href="https://www.docker.com/"><img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" /></a>
+  <a href="https://nginx.org/"><img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white" alt="Nginx" /></a>
+</p>
+
+## Table of Contents
+
+- [Project Briefing](#project-briefing)
+- [Built With](#built-with)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Available Scripts](#available-scripts)
+- [How API Requests Work](#how-api-requests-work)
+- [Testing](#testing)
+- [Docker](#docker)
+- [Deployment](#deployment)
+- [Screenshots](#screenshots)
+- [Future Improvements](#future-improvements)
+- [Author](#author)
+- [License](#license)
 
 ## Project Briefing
 
-This is a carousel based gallery app created using Vue and Buefy. For images it uses API provided by [PixaBay](https://pixabay.com/) which is free for limited usage.
-Carousel is derived from Buefy which is a UI Library based on Bulma CSS for Vue.
-
-I had a lot of fun making this project, completed it in around 2 hours. I used Bulma CSS after an extended gap of like couple of years.
+A responsive image gallery built with Vue 3 and styled with Tailwind CSS. Images are fetched from the [Pixabay API](https://pixabay.com/api/docs/), which is free for limited usage. The app supports keyword search, page transitions between routes and a mobile friendly layout.
 
 ## Built With
 
-* [Vue](https://vuejs.org/)
-* [Buefy](https://buefy.org/)
-* [PixaBay API](https://pixabay.com/api/docs/)
+| Technology | Purpose |
+| --- | --- |
+| [Vue 3](https://vuejs.org/) | UI framework (Composition API, `<script setup>`) |
+| [Vue Router](https://router.vuejs.org/) | Client side routing with lazy loaded screens |
+| [Vite](https://vite.dev/) | Dev server and build tool |
+| [Tailwind CSS 4](https://tailwindcss.com/) | Utility-first styling via `@tailwindcss/vite` |
+| [Pixabay API](https://pixabay.com/api/docs/) | Source of images |
+| [Axios](https://axios-http.com/) | HTTP client with a shared instance in `src/plugins/interceptor.js` |
+| [Swiper](https://swiperjs.com/) | Carousel / slider |
+| [Headless UI](https://headlessui.com/) and [Heroicons](https://heroicons.com/) | Accessible components and icons |
+| [AOS](https://michalsnik.github.io/aos/) | Scroll animations |
+| [Fuse.js](https://www.fusejs.io/) | Fuzzy search |
+| [Day.js](https://day.js.org/) | Date formatting |
+| [AG Grid](https://www.ag-grid.com/) | Data grid |
+| [Vitest](https://vitest.dev/), [Vue Test Utils](https://test-utils.vuejs.org/) and [happy-dom](https://github.com/capricorn86/happy-dom) | Unit testing |
+| [Docker](https://www.docker.com/) and [Nginx](https://nginx.org/) | Production container |
 
-## Authors
+## Features
 
-* **Amit Prafulla (APFirebolt)** - (https://apgiiit.com/)
+- Search Pixabay images by keyword.
+- Home, About and Pixabay gallery screens, with a catch-all 404 page.
+- Animated slide transition between routes.
+- Lazy loaded routes for faster initial load.
+- Loader component while images are being fetched.
+- Responsive header and footer.
+- Dev proxy that keeps the API key out of the browser.
+- Multi-stage Dockerfile and Vercel configuration.
 
-## 💾 Project setup
-
-Simply install node modules for frontend, setup your env file and enter the API keys which you should have retrieved from PixaBay and Flickr websites respectively. The API limits usage on an hourly basis to somewhere around 100 requests. But, it should be suffice for Educational and Experimental purposes.
-
+## Project Structure
 
 ```
+.
+├── Dockerfile
+├── nginx.conf
+├── vercel.json
+├── vite.config.js
+├── index.html
+├── public/
+├── screenshots/
+└── src/
+    ├── App.vue                 # Layout and route transition
+    ├── main.js                 # App bootstrap
+    ├── style.css               # Tailwind entry and theme
+    ├── components/             # Header, Footer, Loader
+    ├── composables/            # Reusable logic (useDinosaur)
+    ├── plugins/interceptor.js  # Axios instance
+    ├── routes/index.js         # Route definitions
+    ├── screens/                # Home, About, Pixabay, 404
+    └── __tests__/              # Vitest suites
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 20 or newer
+- npm
+- A free API key from [Pixabay](https://pixabay.com/api/docs/)
+
+### Installation
+
+```bash
+git clone <repository-url>
+cd pixabay-gallery-in-vue-and-buefy
 npm install
-npm run serve
 ```
 
-For production, build the frontend of the app and run the production build. 
+Create a `.env` file in the project root (see below), then start the dev server:
+
+```bash
+npm run dev
+```
+
+The app runs at http://localhost:8080.
+
+## Environment Variables
+
+Create a `.env` file in the project root:
 
 ```
-npm run build
-
-VUE_APP_PIXABAY_API_KEY=your API Key
-VUE_APP_FLICKR_API_KEY=your API Key
+PIXABAY_KEY=your_pixabay_api_key
 ```
-## 🚅 Project Features
 
-- Carousel based image gallery.
-- Uses Buefy for UI components like Carousel, Loaders, Buttons and more.
-- Uses PixaBay API for images.
+`VITE_PIXABAY_KEY` is also accepted. The key is read in `vite.config.js` and appended by the dev server proxy. Pixabay limits usage to roughly 100 requests per minute, which is enough for educational and experimental use. Never commit your `.env` file.
 
-## Project Updates
+## Available Scripts
 
-- Added Flickr API view (23rd January 2022), might add pagination later.
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server on port 8080 |
+| `npm run build` | Create a production build in `dist/` |
+| `npm run preview` | Preview the production build locally |
+| `npm test` | Run the Vitest test suite |
 
-## Future Feature Additions
+## How API Requests Work
 
-- Mobile friendly menu could be added in the future.
+- In development, requests go to `/api/pixabay/`. The Vite proxy forwards them to `https://pixabay.com/api/` and injects the API key from your environment.
+- In production builds, the Axios instance targets `https://pixabay.com/api/` directly. Make sure your deployment supplies the key in a way that does not expose secrets you are not willing to make public, for example through a server-side proxy.
 
-## Project Screenshots
+## Testing
 
-Please find some of the application screenshots below.Screenshot of the rather simple homepage with a Hero component in Bulma CSS.
+Tests live in `src/__tests__/` and cover the 404 screen, header, footer and the `useDinosaur` composable.
 
-![alt text](./screenshots/home.png)
+```bash
+npm test
+```
 
-Top view of the images page, it uses Bulma Cards inside of carousel Buefy component. Icons are powered by "font-awesome" and related dependencies of Vue and Font-Awesome.
+## Docker
 
-![alt text](./screenshots/images.jpg)
+The Dockerfile builds the app with Node and serves the static output with Nginx.
 
-Shows search bar with search icon. Clicking on the search icon would trigger the search API which would fetch the images with associated keywords from pixabay API.
+```bash
+docker build -t pixabay-gallery .
+docker run -p 8080:80 pixabay-gallery
+```
 
-![alt text](./screenshots/images1.jpg)
+## Deployment
 
-Shows the newly added flickr images page where you can fetch images from Flickr using keywords in case you have the flickr API configured in the project.
+A `vercel.json` is included for deploying to Vercel, and `nginx.conf` handles SPA fallback routing for the Docker image.
 
-![alt text](./screenshots/flickr.png)
+## Screenshots
 
+Homepage:
 
+![Homepage](./screenshots/home.png)
+
+Images page:
+
+![Images page](./screenshots/images.jpg)
+
+Search bar and results:
+
+![Search](./screenshots/images1.jpg)
+
+Additional gallery view:
+
+![Gallery](./screenshots/flickr.png)
+
+## Future Improvements
+
+- Pagination for search results.
+- Server-side proxy for production API key handling.
+- More test coverage for screens and the API layer.
+
+## Author
+
+**Amit Prafulla (APFirebolt)** - https://apgiiit.com/
+
+## License
+
+See [LICENSE.md](./LICENSE.md).
