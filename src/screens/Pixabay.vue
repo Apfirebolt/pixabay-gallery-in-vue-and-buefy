@@ -39,7 +39,7 @@
             :navigation="{ nextEl: '.swiper-button-next-custom', prevEl: '.swiper-button-prev-custom' }"
             class="w-full h-[380px] sm:h-[440px]"
           >
-            <swiper-slide v-for="image in images.slice(0, 6)" :key="image.id" class="relative group">
+            <swiper-slide v-for="image in images.slice(0, 6)" :key="image.id" class="relative group cursor-pointer" @click="openModal(image)">
               <img 
                 :src="image.largeImageURL" 
                 :alt="image.tags" 
@@ -105,7 +105,6 @@
 
       <!-- Advanced Filtering & Sorting Toolbar -->
       <div class="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
-        <!-- Filter Pills / Image Types -->
         <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
           <span class="text-xs font-semibold uppercase tracking-wider text-neutral-400 mr-2">Type:</span>
           <button 
@@ -123,7 +122,6 @@
           </button>
         </div>
 
-        <!-- Sorting Dropdown -->
         <div class="flex items-center gap-3 w-full md:w-auto justify-end">
           <span class="text-xs font-semibold uppercase tracking-wider text-neutral-400">Sort By:</span>
           <select 
@@ -149,7 +147,8 @@
         <div 
           v-for="image in filteredAndSortedImages" 
           :key="image.id"
-          class="group relative bg-neutral-900 border border-neutral-800/80 rounded-2xl overflow-hidden shadow-xl hover:border-neutral-700 transition-all duration-300 flex flex-col"
+          @click="openModal(image)"
+          class="group relative bg-neutral-900 border border-neutral-800/80 rounded-2xl overflow-hidden shadow-xl hover:border-neutral-700 transition-all duration-300 flex flex-col cursor-pointer"
         >
           <!-- Thumbnail Image -->
           <div class="relative aspect-[4/3] overflow-hidden bg-neutral-950">
@@ -160,13 +159,9 @@
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             />
             <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-              <a 
-                :href="image.largeImageURL" 
-                target="_blank" 
-                class="w-full text-center py-2 bg-emerald-600/90 hover:bg-emerald-600 text-white rounded-lg text-xs font-medium transition shadow"
-              >
+              <span class="w-full text-center py-2 bg-emerald-600/90 hover:bg-emerald-600 text-white rounded-lg text-xs font-medium transition shadow">
                 View Full Size
-              </a>
+              </span>
             </div>
           </div>
 
@@ -200,6 +195,66 @@
       </div>
 
     </div>
+
+    <!-- Lightbox Modal with Download Feature -->
+    <Teleport to="body">
+      <div v-if="activeImage" class="fixed inset-0 z-50 bg-neutral-950/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-6">
+        <div class="relative max-w-5xl w-full bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
+          
+          <!-- Modal Header -->
+          <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-800 bg-neutral-950/50">
+            <div>
+              <h3 class="text-sm sm:text-base font-bold text-white">Photo by <span class="text-emerald-400">{{ activeImage.user }}</span></h3>
+              <p class="text-xs text-neutral-400">ID: {{ activeImage.id }}</p>
+            </div>
+            <button 
+              @click="closeModal"
+              class="w-9 h-9 rounded-full bg-neutral-800 hover:bg-neutral-700 text-neutral-300 flex items-center justify-center transition"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- Modal Image Preview -->
+          <div class="relative flex-1 bg-neutral-950 flex items-center justify-center p-4 overflow-auto">
+            <img 
+              :src="activeImage.largeImageURL" 
+              :alt="activeImage.tags"
+              class="max-h-[60vh] max-w-full object-contain rounded-xl shadow-lg"
+            />
+          </div>
+
+          <!-- Modal Footer with Stats & Download Button -->
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4 px-6 py-4 border-t border-neutral-800 bg-neutral-950/50">
+            <div class="flex items-center gap-4 text-xs sm:text-sm text-neutral-300">
+              <span>❤️ {{ activeImage.likes }} Likes</span>
+              <span>👁️ {{ activeImage.views }} Views</span>
+              <span>📥 {{ activeImage.downloads }} Downloads</span>
+            </div>
+
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+              <a 
+                :href="activeImage.pageURL" 
+                target="_blank"
+                class="flex-1 sm:flex-none px-4 py-2.5 rounded-xl border border-neutral-700 hover:border-neutral-600 bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white transition text-center"
+              >
+                View on Pixabay ↗
+              </a>
+              <button 
+                @click="downloadImage(activeImage)"
+                :disabled="downloading"
+                class="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-semibold text-white shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <span>📥</span>
+                <span>{{ downloading ? 'Downloading...' : 'Download HD' }}</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </Teleport>
+
   </div>
 </template>
 
@@ -217,6 +272,8 @@ const loading = ref(false);
 const searchQuery = ref("nature");
 const selectedType = ref("all");
 const sortBy = ref("popular");
+const activeImage = ref(null);
+const downloading = ref(false);
 
 const imageTypes = [
   { label: "All Types", value: "all" },
@@ -245,16 +302,47 @@ const searchImages = async () => {
   }
 };
 
+const openModal = (image) => {
+  activeImage.value = image;
+};
+
+const closeModal = () => {
+  activeImage.value = null;
+};
+
+// Secure blob download function to bypass CORS / direct link tab opening restrictions
+const downloadImage = async (image) => {
+  try {
+    downloading.value = true;
+    const imageUrl = image.largeImageURL || image.webformatURL;
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    
+    const blobUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = `pixabay-${image.id}-${image.user.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error("Download failed:", error);
+    // Fallback to opening in new tab if blob fetch fails due to CORS
+    window.open(image.largeImageURL, "_blank");
+  } finally {
+    downloading.value = false;
+  }
+};
+
 // Computed property for instant client-side filtering and sorting
 const filteredAndSortedImages = computed(() => {
   let result = [...images.value];
 
-  // Filter by type
   if (selectedType.value !== "all") {
     result = result.filter(img => img.type === selectedType.value);
   }
 
-  // Sort results
   result.sort((a, b) => {
     if (sortBy.value === "popular") {
       return b.likes - a.likes;
