@@ -1,37 +1,53 @@
 <template>
-  <main class="min-h-screen bg-slate-100 flex items-center justify-center p-4">
-    <section class="max-w-2xl bg-white shadow-xl rounded-2xl p-8 border border-slate-200">
-      <h1 class="text-4xl font-extrabold text-emerald-800 tracking-tight mb-4">
-        Welcome to Dinosaur World
+  <main class="min-h-screen bg-[var(--color-dark)] text-slate-100 flex items-center justify-center p-4 pt-24">
+    <section class="max-w-3xl w-full bg-slate-900/60 backdrop-blur-xl shadow-2xl rounded-3xl p-8 sm:p-12 border border-slate-800 text-center space-y-6">
+      
+      <!-- Badge -->
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] text-xs font-semibold uppercase tracking-wider border border-[var(--color-primary)]/20">
+        <span>📸 Pixabay Discovery</span>
+      </div>
+
+      <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+        Capture and Explore Visual Stories
       </h1>
       
-      <p class="text-slate-700 leading-relaxed mb-4">
-        Discover the fascinating world of dinosaurs! Dive into their history, learn about their habitats, and
-        uncover the secrets of their extinction.
+      <p class="text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mx-auto">
+        Discover millions of high-resolution stock photos, scenic landscapes, and neon cyberpunk aesthetics powered by secure backend proxies and Vue 3.
       </p>
       
-      <p class="text-slate-700 leading-relaxed mb-6">
-        Whether you're a paleontology enthusiast or just curious, this is the perfect place to start your
-        journey into the prehistoric era.
+      <p class="text-slate-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
+        Whether you are searching for inspiration, designing a portfolio, or curating photography collections, this is your portal to stunning imagery.
       </p>
       
-      <button 
-        type="button"
-        @click="handleExplore"
-        class="bg-emerald-600 text-white font-medium px-5 py-2.5 rounded-lg shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors duration-150"
-      >
-        Explore Now
-      </button>
+      <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <router-link 
+          to="/pixabay"
+          class="w-full sm:w-auto bg-[var(--color-primary)] text-white font-semibold px-8 py-3.5 rounded-xl shadow-lg shadow-[var(--color-primary)]/25 hover:bg-[var(--color-primary)]/90 transition-all duration-200"
+        >
+          Explore Gallery
+        </router-link>
+
+        <router-link 
+          to="/about"
+          class="w-full sm:w-auto bg-slate-800 hover:bg-slate-700/80 text-slate-200 font-semibold px-6 py-3.5 rounded-xl border border-slate-700/60 transition-all duration-200"
+        >
+          Learn More
+        </router-link>
+      </div>
     </section>
   </main>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+
 defineOptions({
   name: 'Homepage'
 })
 
+const router = useRouter();
+
 const handleExplore = () => {
-  // Navigation or action logic goes here
-}
+  router.push('/pixabay');
+};
 </script>
