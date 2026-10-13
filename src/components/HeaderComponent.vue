@@ -17,7 +17,7 @@
             <span class="text-base">📸</span>
           </div>
           <span class="text-xl font-bold tracking-tight text-[var(--color-light)] group-hover:text-[var(--color-primary)] transition-colors">
-            Pixabay Gallery
+            Softgenie Gallery
           </span>
         </router-link>
 

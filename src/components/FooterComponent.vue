@@ -9,7 +9,7 @@
               📸
             </div>
             <span class="text-xl font-bold tracking-tight text-[var(--color-light)] group-hover:text-[var(--color-primary)] transition-colors">
-              Pixabay Gallery
+              Softgenie Gallery
             </span>
           </router-link>
           <p class="max-w-sm text-sm leading-6 text-slate-400">

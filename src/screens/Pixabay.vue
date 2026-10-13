@@ -1,13 +1,16 @@
 <template>
+  <!-- Load Swiper CSS via CDN for professional carousel styling -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
   <div class="min-h-screen bg-neutral-950 text-neutral-100 pt-28 pb-16 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-8">
+    <div class="max-w-7xl mx-auto space-y-12">
       
       <!-- Header Section -->
-      <div class="text-center max-w-3xl mx-auto space-y-3">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold uppercase tracking-wider border border-emerald-500/20">
+      <div class="text-center max-w-5xl mx-auto space-y-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-xs font-semibold uppercase tracking-wider border border-emerald-500/25">
           <span>📸 Pixabay Gallery</span>
         </div>
-        <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+        <h1 class="text-3xl font-extrabold tracking-tight text-white">
           Explore High-Resolution Photography
         </h1>
         <p class="text-sm sm:text-base text-neutral-400">
@@ -15,8 +18,70 @@
         </p>
       </div>
 
+      <!-- Featured Carousel Section -->
+      <div v-if="images.length > 0" class="space-y-4">
+        <div class="flex items-center justify-between px-2">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+            Featured Highlights
+          </h2>
+          <span class="text-xs text-neutral-400">Swipe or use arrows</span>
+        </div>
+
+        <div class="relative rounded-3xl overflow-hidden border border-neutral-800 bg-neutral-900 shadow-2xl">
+          <swiper
+            :modules="swiperModules"
+            :slides-per-view="1"
+            :space-between="20"
+            :loop="true"
+            :autoplay="{ delay: 4500, disableOnInteraction: false }"
+            :pagination="{ clickable: true }"
+            :navigation="{ nextEl: '.swiper-button-next-custom', prevEl: '.swiper-button-prev-custom' }"
+            class="w-full h-[380px] sm:h-[440px]"
+          >
+            <swiper-slide v-for="image in images.slice(0, 6)" :key="image.id" class="relative group">
+              <img 
+                :src="image.largeImageURL" 
+                :alt="image.tags" 
+                class="w-full h-full object-cover"
+              />
+              <!-- Gradient Overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/30 to-transparent flex flex-col justify-end p-6 sm:p-8">
+                <div class="max-w-2xl space-y-2">
+                  <div class="flex flex-wrap gap-1.5">
+                    <span 
+                      v-for="tag in image.tags.split(',').slice(0, 3)" 
+                      :key="tag"
+                      class="text-[11px] px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-medium"
+                    >
+                      #{{ tag.trim() }}
+                    </span>
+                  </div>
+                  <p class="text-lg sm:text-2xl font-bold text-white drop-shadow">
+                    Photo by <span class="text-emerald-400">{{ image.user }}</span>
+                  </p>
+                  <div class="flex items-center gap-4 text-xs text-neutral-300 pt-1">
+                    <span>❤️ {{ image.likes }} Likes</span>
+                    <span>👁️ {{ image.views }} Views</span>
+                    <span>📥 {{ image.downloads }} Downloads</span>
+                  </div>
+                </div>
+              </div>
+            </swiper-slide>
+          </swiper>
+
+          <!-- Custom Navigation Buttons -->
+          <button class="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-neutral-950/70 hover:bg-emerald-600 text-white flex items-center justify-center border border-neutral-700/50 backdrop-blur transition shadow-lg">
+            ❮
+          </button>
+          <button class="swiper-button-next-custom absolute right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-neutral-950/70 hover:bg-emerald-600 text-white flex items-center justify-center border border-neutral-700/50 backdrop-blur transition shadow-lg">
+            ❯
+          </button>
+        </div>
+      </div>
+
       <!-- Search Bar & Controls -->
-      <form @submit.prevent="searchImages" class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto">
+      <form @submit.prevent="searchImages" class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto pt-4">
         <div class="relative w-full">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-neutral-500">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -109,8 +174,12 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import httpClient from "../plugins/interceptor.js";
 import Loader from "../components/Loader.vue";
+
+const swiperModules = [Autoplay, Pagination, Navigation];
 
 const images = ref([]);
 const loading = ref(false);

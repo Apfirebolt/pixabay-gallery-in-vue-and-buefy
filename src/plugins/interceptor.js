@@ -1,14 +1,12 @@
 import axios from 'axios';
 
-let baseURL = 'https://pixabay.com/api/?key=' + import.meta.env.VITE_PIXABAY_KEY;
-
+// Ensure the proxy path ends correctly
+const baseURL = import.meta.env.DEV ? '/api/pixabay/' : 'https://pixabay.com/api/';
 
 const httpClient = axios.create({ baseURL });
 
-// print request headers
 httpClient.interceptors.request.use(request => {
-
-    console.log('Starting Request', import.meta.env);
+    console.log('Proxying Request:', request.url, request.params);
     return request;
 });
 
