@@ -3,7 +3,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
   <div class="min-h-screen bg-neutral-950 text-neutral-100 pt-28 pb-16 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-12">
+    <div class="max-w-7xl mx-auto space-y-10">
       
       <!-- Header Section -->
       <div class="text-center max-w-5xl mx-auto space-y-3">
@@ -45,7 +45,6 @@
                 :alt="image.tags" 
                 class="w-full h-full object-cover"
               />
-              <!-- Gradient Overlay -->
               <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/30 to-transparent flex flex-col justify-end p-6 sm:p-8">
                 <div class="max-w-2xl space-y-2">
                   <div class="flex flex-wrap gap-1.5">
@@ -64,13 +63,13 @@
                     <span>❤️ {{ image.likes }} Likes</span>
                     <span>👁️ {{ image.views }} Views</span>
                     <span>📥 {{ image.downloads }} Downloads</span>
+                    <span>💬 {{ image.comments }} Comments</span>
                   </div>
                 </div>
               </div>
             </swiper-slide>
           </swiper>
 
-          <!-- Custom Navigation Buttons -->
           <button class="swiper-button-prev-custom absolute left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-neutral-950/70 hover:bg-emerald-600 text-white flex items-center justify-center border border-neutral-700/50 backdrop-blur transition shadow-lg">
             ❮
           </button>
@@ -81,7 +80,7 @@
       </div>
 
       <!-- Search Bar & Controls -->
-      <form @submit.prevent="searchImages" class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-2xl mx-auto pt-4">
+      <form @submit.prevent="searchImages" class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-3xl mx-auto pt-2">
         <div class="relative w-full">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-neutral-500">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,15 +103,51 @@
         </button>
       </form>
 
+      <!-- Advanced Filtering & Sorting Toolbar -->
+      <div class="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Filter Pills / Image Types -->
+        <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+          <span class="text-xs font-semibold uppercase tracking-wider text-neutral-400 mr-2">Type:</span>
+          <button 
+            v-for="type in imageTypes" 
+            :key="type.value"
+            @click="selectedType = type.value"
+            :class="[
+              'px-3.5 py-1.5 rounded-lg text-xs font-medium transition',
+              selectedType === type.value 
+                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20' 
+                : 'bg-neutral-800/80 text-neutral-300 hover:bg-neutral-700'
+            ]"
+          >
+            {{ type.label }}
+          </button>
+        </div>
+
+        <!-- Sorting Dropdown -->
+        <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+          <span class="text-xs font-semibold uppercase tracking-wider text-neutral-400">Sort By:</span>
+          <select 
+            v-model="sortBy"
+            class="rounded-xl border border-neutral-800 bg-neutral-900 px-3 py-2 text-xs text-white outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition"
+          >
+            <option value="popular">Most Popular (Likes)</option>
+            <option value="downloads">Most Downloaded</option>
+            <option value="comments">Most Commented</option>
+            <option value="views">Most Viewed</option>
+            <option value="latest">Latest</option>
+          </select>
+        </div>
+      </div>
+
       <!-- Loading State -->
       <div v-if="loading" class="flex justify-center items-center py-24">
         <Loader message="Fetching stunning photos..." :full-screen="false" />
       </div>
 
-      <!-- Image Grid -->
-      <div v-else-if="images.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Filtered Image Grid -->
+      <div v-else-if="filteredAndSortedImages.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         <div 
-          v-for="image in images" 
+          v-for="image in filteredAndSortedImages" 
           :key="image.id"
           class="group relative bg-neutral-900 border border-neutral-800/80 rounded-2xl overflow-hidden shadow-xl hover:border-neutral-700 transition-all duration-300 flex flex-col"
         >
@@ -138,14 +173,10 @@
           <!-- Card Footer (Author & Stats) -->
           <div class="p-4 flex flex-col justify-between flex-1 space-y-3">
             <div class="flex items-center justify-between text-xs text-neutral-400">
-              <span class="font-medium text-neutral-300">By {{ image.user }}</span>
-              <div class="flex items-center gap-3">
-                <span class="flex items-center gap-1">
-                  ❤️ {{ image.likes }}
-                </span>
-                <span class="flex items-center gap-1">
-                  👁️ {{ image.views }}
-                </span>
+              <span class="font-medium text-neutral-300 truncate max-w-[120px]">By {{ image.user }}</span>
+              <div class="flex items-center gap-2.5">
+                <span class="flex items-center gap-1">❤️ {{ image.likes }}</span>
+                <span class="flex items-center gap-1">📥 {{ image.downloads }}</span>
               </div>
             </div>
 
@@ -165,7 +196,7 @@
 
       <!-- Empty State -->
       <div v-else class="text-center py-24 space-y-3">
-        <p class="text-neutral-400 text-base">No images found for "{{ searchQuery }}". Try searching for something else!</p>
+        <p class="text-neutral-400 text-base">No images match your filter criteria. Try adjusting your filters!</p>
       </div>
 
     </div>
@@ -173,7 +204,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import httpClient from "../plugins/interceptor.js";
@@ -183,7 +214,16 @@ const swiperModules = [Autoplay, Pagination, Navigation];
 
 const images = ref([]);
 const loading = ref(false);
-const searchQuery = ref("nature"); // Default starting query
+const searchQuery = ref("nature");
+const selectedType = ref("all");
+const sortBy = ref("popular");
+
+const imageTypes = [
+  { label: "All Types", value: "all" },
+  { label: "Photos", value: "photo" },
+  { label: "Illustrations", value: "illustration" },
+  { label: "Vectors", value: "vector" },
+];
 
 const searchImages = async () => {
   if (!searchQuery.value.trim()) return;
@@ -193,9 +233,8 @@ const searchImages = async () => {
     const response = await httpClient.get("", {
       params: {
         q: searchQuery.value,
-        image_type: "photo",
         safesearch: "true",
-        per_page: 20
+        per_page: 30
       }
     });
     images.value = response.data.hits || [];
@@ -205,6 +244,34 @@ const searchImages = async () => {
     loading.value = false;
   }
 };
+
+// Computed property for instant client-side filtering and sorting
+const filteredAndSortedImages = computed(() => {
+  let result = [...images.value];
+
+  // Filter by type
+  if (selectedType.value !== "all") {
+    result = result.filter(img => img.type === selectedType.value);
+  }
+
+  // Sort results
+  result.sort((a, b) => {
+    if (sortBy.value === "popular") {
+      return b.likes - a.likes;
+    } else if (sortBy.value === "downloads") {
+      return b.downloads - a.downloads;
+    } else if (sortBy.value === "latest") {
+      return b.id - a.id;
+    } else if (sortBy.value === "comments") {
+      return b.comments - a.comments;
+    } else if (sortBy.value === "views") {
+      return b.views - a.views;
+    }
+    return 0;
+  });
+
+  return result;
+});
 
 onMounted(() => {
   searchImages();
