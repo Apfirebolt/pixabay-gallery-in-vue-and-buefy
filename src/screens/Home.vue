@@ -1,10 +1,10 @@
 <template>
   <main class="min-h-screen bg-[var(--color-dark)] text-slate-100 flex items-center justify-center p-4 pt-24">
-    <section class="max-w-3xl w-full bg-slate-900/60 backdrop-blur-xl shadow-2xl rounded-3xl p-8 sm:p-12 border border-slate-800 text-center space-y-6">
+    <section class="max-w-6xl w-full bg-slate-900/60 backdrop-blur-xl shadow-2xl rounded-3xl p-8 sm:p-12 border border-slate-800 text-center space-y-6">
       
       <!-- Badge -->
       <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] text-xs font-semibold uppercase tracking-wider border border-[var(--color-primary)]/20">
-        <span>📸 Pixabay Discovery</span>
+        <span>📸 Softgenie Gallery</span>
       </div>
 
       <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
@@ -12,11 +12,7 @@
       </h1>
       
       <p class="text-slate-400 text-base sm:text-lg leading-relaxed max-w-xl mx-auto">
-        Discover millions of high-resolution stock photos, scenic landscapes, and neon cyberpunk aesthetics powered by secure backend proxies and Vue 3.
-      </p>
-      
-      <p class="text-slate-400 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
-        Whether you are searching for inspiration, designing a portfolio, or curating photography collections, this is your portal to stunning imagery.
+        Discover millions of high-resolution stock photos, scenic landscapes, and neon cyberpunk aesthetics powered by Pixabay API and Vue 3.
       </p>
       
       <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">

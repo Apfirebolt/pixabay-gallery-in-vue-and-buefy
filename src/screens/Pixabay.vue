@@ -19,7 +19,7 @@
       </div>
 
       <!-- Featured Carousel Section -->
-      <div v-if="images.length > 0" class="space-y-4">
+      <div v-if="images.length > 0 && currentPage === 1" class="space-y-4">
         <div class="flex items-center justify-between px-2">
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
@@ -80,7 +80,7 @@
       </div>
 
       <!-- Search Bar & Controls -->
-      <form @submit.prevent="searchImages" class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-3xl mx-auto pt-2">
+      <form @submit.prevent="handleSearchSubmit" class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-3xl mx-auto pt-2">
         <div class="relative w-full">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-neutral-500">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -143,55 +143,121 @@
       </div>
 
       <!-- Filtered Image Grid -->
-      <div v-else-if="filteredAndSortedImages.length > 0" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <div 
-          v-for="image in filteredAndSortedImages" 
-          :key="image.id"
-          @click="openModal(image)"
-          class="group relative bg-neutral-900 border border-neutral-800/80 rounded-2xl overflow-hidden shadow-xl hover:border-neutral-700 transition-all duration-300 flex flex-col cursor-pointer"
-        >
-          <!-- Thumbnail Image -->
-          <div class="relative aspect-[4/3] overflow-hidden bg-neutral-950">
-            <img 
-              :src="image.webformatURL" 
-              :alt="image.tags"
-              loading="lazy"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-              <span class="w-full text-center py-2 bg-emerald-600/90 hover:bg-emerald-600 text-white rounded-lg text-xs font-medium transition shadow">
-                View Full Size
-              </span>
-            </div>
-          </div>
-
-          <!-- Card Footer (Author & Stats) -->
-          <div class="p-4 flex flex-col justify-between flex-1 space-y-3">
-            <div class="flex items-center justify-between text-xs text-neutral-400">
-              <span class="font-medium text-neutral-300 truncate max-w-[120px]">By {{ image.user }}</span>
-              <div class="flex items-center gap-2.5">
-                <span class="flex items-center gap-1">❤️ {{ image.likes }}</span>
-                <span class="flex items-center gap-1">📥 {{ image.downloads }}</span>
+      <div v-else-if="filteredAndSortedImages.length > 0" class="space-y-10">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div 
+            v-for="image in filteredAndSortedImages" 
+            :key="image.id"
+            @click="openModal(image)"
+            class="group relative bg-neutral-900 border border-neutral-800/80 rounded-2xl overflow-hidden shadow-xl hover:border-neutral-700 transition-all duration-300 flex flex-col cursor-pointer"
+          >
+            <!-- Thumbnail Image -->
+            <div class="relative aspect-[4/3] overflow-hidden bg-neutral-950">
+              <img 
+                :src="image.webformatURL" 
+                :alt="image.tags"
+                loading="lazy"
+                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
+                <span class="w-full text-center py-2 bg-emerald-600/90 hover:bg-emerald-600 text-white rounded-lg text-xs font-medium transition shadow">
+                  View Full Size
+                </span>
               </div>
             </div>
 
-            <!-- Tags -->
-            <div class="flex flex-wrap gap-1 pt-2 border-t border-neutral-800/60">
-              <span 
-                v-for="tag in image.tags.split(',').slice(0, 3)" 
-                :key="tag"
-                class="text-[10px] px-2 py-0.5 rounded bg-neutral-800 text-neutral-300"
-              >
-                #{{ tag.trim() }}
-              </span>
+            <!-- Card Footer (Author & Stats) -->
+            <div class="p-4 flex flex-col justify-between flex-1 space-y-3">
+              <div class="flex items-center justify-between text-xs text-neutral-400">
+                <span class="font-medium text-neutral-300 truncate max-w-[120px]">By {{ image.user }}</span>
+                <div class="flex items-center gap-2.5">
+                  <span class="flex items-center gap-1">❤️ {{ image.likes }}</span>
+                  <span class="flex items-center gap-1">📥 {{ image.downloads }}</span>
+                </div>
+              </div>
+
+              <!-- Tags -->
+              <div class="flex flex-wrap gap-1 pt-2 border-t border-neutral-800/60">
+                <span 
+                  v-for="tag in image.tags.split(',').slice(0, 3)" 
+                  :key="tag"
+                  class="text-[10px] px-2 py-0.5 rounded bg-neutral-800 text-neutral-300"
+                >
+                  #{{ tag.trim() }}
+                </span>
+              </div>
             </div>
+          </div>
+        </div>
+
+        <!-- Pagination Controls Bar -->
+        <div v-if="totalPages > 1" class="bg-neutral-900/60 border border-neutral-800 rounded-2xl p-4 sm:p-6 backdrop-blur-md flex flex-col lg:flex-row items-center justify-between gap-4">
+          <!-- Page info & Quick Jump Form -->
+          <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto justify-center lg:justify-start">
+            <span class="text-xs text-neutral-400">
+              Page <span class="font-bold text-white">{{ currentPage }}</span> of <span class="font-bold text-white">{{ totalPages }}</span>
+            </span>
+
+            <form @submit.prevent="jumpToPage" class="flex items-center gap-2">
+              <span class="text-xs text-neutral-400">Jump to:</span>
+              <input 
+                v-model.number="jumpPageInput"
+                type="number"
+                min="1"
+                :max="totalPages"
+                placeholder="Page"
+                class="w-16 rounded-lg border border-neutral-800 bg-neutral-950 px-2 py-1.5 text-xs text-white text-center outline-none focus:border-emerald-500"
+              />
+              <button 
+                type="submit"
+                class="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-xs font-semibold text-white transition"
+              >
+                Go
+              </button>
+            </form>
+          </div>
+
+          <!-- Pagination Number Buttons & Next/Prev -->
+          <div class="flex items-center gap-1.5 flex-wrap justify-center">
+            <button
+              @click="changePage(currentPage - 1)"
+              :disabled="currentPage === 1"
+              class="px-3.5 py-2 rounded-xl bg-neutral-800/80 hover:bg-neutral-700 text-xs font-semibold text-white transition disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+
+            <!-- Page Number Pills (Displays subset around current page) -->
+            <template v-for="page in displayedPages" :key="page">
+              <button
+                v-if="page !== '...'"
+                @click="changePage(page)"
+                :class="[
+                  'w-9 h-9 rounded-xl text-xs font-semibold transition flex items-center justify-center',
+                  currentPage === page
+                    ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20'
+                    : 'bg-neutral-800/60 text-neutral-300 hover:bg-neutral-700'
+                ]"
+              >
+                {{ page }}
+              </button>
+              <span v-else class="px-2 text-neutral-500 text-xs">...</span>
+            </template>
+
+            <button
+              @click="changePage(currentPage + 1)"
+              :disabled="currentPage === totalPages"
+              class="px-3.5 py-2 rounded-xl bg-neutral-800/80 hover:bg-neutral-700 text-xs font-semibold text-white transition disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Next
+            </button>
           </div>
         </div>
       </div>
 
       <!-- Empty State -->
       <div v-else class="text-center py-24 space-y-3">
-        <p class="text-neutral-400 text-base">No images match your filter criteria. Try adjusting your filters!</p>
+        <p class="text-neutral-400 text-base">No images match your filter criteria. Try adjusting your search or filters!</p>
       </div>
 
     </div>
@@ -275,6 +341,12 @@ const sortBy = ref("popular");
 const activeImage = ref(null);
 const downloading = ref(false);
 
+// Pagination States
+const currentPage = ref(1);
+const perPage = 24;
+const totalHits = ref(0);
+const jumpPageInput = ref("");
+
 const imageTypes = [
   { label: "All Types", value: "all" },
   { label: "Photos", value: "photo" },
@@ -291,16 +363,81 @@ const searchImages = async () => {
       params: {
         q: searchQuery.value,
         safesearch: "true",
-        per_page: 30
+        per_page: perPage,
+        page: currentPage.value
       }
     });
+    
     images.value = response.data.hits || [];
+    // Pixabay API caps maximum pagination total hits at 500
+    totalHits.value = Math.min(response.data.totalHits || 0, 500);
+    
+    // Scroll smoothly back to top of gallery on page change
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   } catch (error) {
     console.error("Error fetching images from Pixabay:", error);
   } finally {
     loading.value = false;
   }
 };
+
+const handleSearchSubmit = () => {
+  currentPage.value = 1;
+  searchImages();
+};
+
+const totalPages = computed(() => {
+  return Math.ceil(totalHits.value / perPage) || 1;
+});
+
+const changePage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+    searchImages();
+  }
+};
+
+const jumpToPage = () => {
+  const pageNum = parseInt(jumpPageInput.value);
+  if (pageNum >= 1 && pageNum <= totalPages.value) {
+    changePage(pageNum);
+    jumpPageInput.value = "";
+  }
+};
+
+// Generates smart page number array with ellipses for clean navigation
+const displayedPages = computed(() => {
+  const current = currentPage.value;
+  const total = totalPages.value;
+  const delta = 2;
+  const range = [];
+  const rangeWithDots = [];
+  let l;
+
+  range.push(1);
+  for (let i = current - delta; i <= current + delta; i++) {
+    if (i < total && i > 1) {
+      range.push(i);
+    }
+  }
+  if (total > 1) {
+    range.push(total);
+  }
+
+  for (let i of range) {
+    if (l) {
+      if (i - l === 2) {
+        rangeWithDots.push(l + 1);
+      } else if (i - l !== 1) {
+        rangeWithDots.push('...');
+      }
+    }
+    rangeWithDots.push(i);
+    l = i;
+  }
+
+  return rangeWithDots;
+});
 
 const openModal = (image) => {
   activeImage.value = image;
@@ -310,7 +447,6 @@ const closeModal = () => {
   activeImage.value = null;
 };
 
-// Secure blob download function to bypass CORS / direct link tab opening restrictions
 const downloadImage = async (image) => {
   try {
     downloading.value = true;
@@ -328,14 +464,12 @@ const downloadImage = async (image) => {
     window.URL.revokeObjectURL(blobUrl);
   } catch (error) {
     console.error("Download failed:", error);
-    // Fallback to opening in new tab if blob fetch fails due to CORS
     window.open(image.largeImageURL, "_blank");
   } finally {
     downloading.value = false;
   }
 };
 
-// Computed property for instant client-side filtering and sorting
 const filteredAndSortedImages = computed(() => {
   let result = [...images.value];
 
