@@ -1,7 +1,11 @@
 import axios from 'axios';
 
-// Both local Vite proxy and Vercel serverless function use /api/pixabay
-const baseURL = '/api/pixabay';
+const isProduction = import.meta.env.PROD || import.meta.env.VITE_ENVIRONMENT === 'production';
+
+const apiKey = import.meta.env.VITE_PIXABAY_KEY;
+const baseURL = isProduction && apiKey 
+  ? `https://pixabay.com/api/?key=${apiKey}` 
+  : '/api/pixabay';
 
 const httpClient = axios.create({ baseURL });
 

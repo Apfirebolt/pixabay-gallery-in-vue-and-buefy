@@ -1,8 +1,17 @@
 {
+  "functions": {
+    "api/pixabay.js": {
+      "maxDuration": 10
+    }
+  },
   "rewrites": [
     {
       "source": "/api/pixabay",
       "destination": "/api/pixabay.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
