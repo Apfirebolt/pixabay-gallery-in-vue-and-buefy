@@ -6,15 +6,14 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server API key is not configured' });
   }
 
-  // Extract query parameters passed from your frontend (e.g., q, image_type, safesearch, per_page)
-  const queryParams = new URLSearchParams(req.query).toString();
-  
+  const params = new URLSearchParams(req.query);
+  params.set('key', apiKey);
+
   try {
-    const response = await fetch(`https://pixabay.com/api/?key=${apiKey}&${queryParams}`);
+    const response = await fetch(`https://pixabay.com/api/?${params}`);
     const data = await response.json();
-    
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    return res.status(200).json(data);
+
+    return res.status(response.status).json(data);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to fetch from Pixabay' });
   }
