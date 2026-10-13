@@ -1,49 +1,40 @@
 {
-  "name": "vue-pixabay-gallery",
-  "version": "0.1.0",
+  "name": "pixabay_gallery",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/vue-fontawesome": "^2.0.6",
-    "buefy": "^0.9.14",
-    "core-js": "^3.6.5",
-    "font-awesome": "^4.7.0",
-    "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "@ag-grid-community/client-side-row-model": "~32.3.9",
+    "@ag-grid-community/core": "~32.3.9",
+    "@ag-grid-community/styles": "~32.3.9",
+    "@ag-grid-community/vue3": "~32.3.9",
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^1.0.6",
+    "@tailwindcss/vite": "^4.3.3",
+    "aos": "^2.3.4",
+    "axios": "^1.20.0",
+    "dayjs": "^1.11.23",
+    "express": "^5.2.1",
+    "fuse.js": "^7.5.0",
+    "happy-dom": "^20.11.8",
+    "tailwindcss": "^4.3.3",
+    "vitest": "^4.1.11",
+    "vue": "^3.5.42",
+    "vue-router": "^5.2.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-router": "^4.5.15",
-    "@vue/cli-service": "~4.5.0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "vue-template-compiler": "^2.6.11"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+    "@tailwindcss/postcss": "^4.3.3",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "@vue/test-utils": "^2.4.11",
+    "autoprefixer": "^10.5.4",
+    "happy-dom": "^17.4.4",
+    "vite": "^8.2.2",
+    "vitest": "^3.1.1"
+  }
 }
