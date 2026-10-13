@@ -1,10 +1,12 @@
 <template>
   <div class="bg-secondary-300">
     <HeaderComponent />
-    <main class="mt-12 sm:mt-6">
-      <router-view v-slot="{ Component }">
+    <main class="mt-12 sm:mt-6 overflow-x-hidden">
+      <router-view v-slot="{ Component, route }">
         <transition name="slide-left" mode="out-in">
-          <component :is="Component" />
+          <div :key="route.path">
+            <component :is="Component" />
+          </div>
         </transition>
       </router-view>
     </main>
