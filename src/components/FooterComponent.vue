@@ -103,7 +103,7 @@
       <!-- Bottom Bar -->
       <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800/80 pt-8 sm:flex-row">
         <p class="text-xs text-slate-500">
-          &copy; {{ currentYear }} Pixabay Gallery. All rights reserved.
+          &copy; {{ currentYear }} Softgenie Gallery. All rights reserved.
         </p>
         <div class="flex items-center gap-6 text-xs text-slate-500">
           <router-link to="/privacy" class="transition hover:text-[var(--color-light)]">

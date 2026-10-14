@@ -325,8 +325,9 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
+import { useRoute } from 'vue-router';
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import httpClient from "../plugins/interceptor.js";
 import Loader from "../components/Loader.vue";
@@ -335,7 +336,8 @@ const swiperModules = [Autoplay, Pagination, Navigation];
 
 const images = ref([]);
 const loading = ref(false);
-const searchQuery = ref("nature");
+const route = useRoute();
+const searchQuery = ref(route.query.q || "nature");
 const selectedType = ref("all");
 const sortBy = ref("popular");
 const activeImage = ref(null);
@@ -355,7 +357,13 @@ const imageTypes = [
 ];
 
 const searchImages = async () => {
+
   if (!searchQuery.value.trim()) return;
+
+  // Update searchQuery based on URL query parameter if available
+  if (route.query.q) {
+    searchQuery.value = route.query.q;
+  }
   
   try {
     loading.value = true;
@@ -494,6 +502,14 @@ const filteredAndSortedImages = computed(() => {
 
   return result;
 });
+
+watch(
+  () => route.query.q,
+  (newQuery) => {
+    searchQuery.value = newQuery || "nature";
+    searchImages();
+  }
+);
 
 onMounted(() => {
   searchImages();
