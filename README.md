@@ -159,19 +159,15 @@ A `vercel.json` is included for deploying to Vercel, and `nginx.conf` handles SP
 
 Homepage:
 
-![Homepage](./screenshots/home.png)
+![Homepage](./screenshots/1.jpg)
 
 Images page:
 
-![Images page](./screenshots/images.jpg)
+![Images page](./screenshots/2.jpg)
 
 Search bar and results:
 
-![Search](./screenshots/images1.jpg)
-
-Additional gallery view:
-
-![Gallery](./screenshots/flickr.png)
+![Search](./screenshots/3.jpg)
 
 ## Future Improvements
 
